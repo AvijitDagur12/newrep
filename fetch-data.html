@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Form</title>
+</head>
+<body>
+
+    <h2>Contact Us</h2>
+    <form id="contactForm">
+        <label for="name">Name:</label><br>
+        <input type="text" id="name" name="name" required><br><br>
+        <label for="email">Email:</label><br>
+        <input type="email" id="email" name="email" required><br><br>
+        <label for="message">Message:</label><br>
+        <textarea id="message" name="message" required></textarea><br><br>
+        <button type="submit">Submit</button>
+    </form>
+
+    <!-- Include Firebase SDKs -->
+    <script type="module">
+        // Import Firebase functions
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+        import { getFirestore, collection, addDoc, Timestamp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyD1ibwr3TDD1iLWcE_3m06DGQHml2UB2kI",
+            authDomain: "avijit-b5367.firebaseapp.com",
+            projectId: "avijit-b5367",
+            storageBucket: "avijit-b5367.appspot.com",
+            messagingSenderId: "358516610171",
+            appId: "1:358516610171:web:0c9a14e14b4b0beed77ede",
+            measurementId: "G-8HYLDRLMPD"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Handle form submission
+        document.getElementById('contactForm').addEventListener('submit', async (event) => {
+            event.preventDefault(); // Prevent page reload
+
+            // Get form values
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const message = document.getElementById('message').value;
+
+            try {
+                // Add a new document with a generated ID in Firestore at the correct path
+                const docRef = await addDoc(collection(db, "contact-form", "collectionfromdata", "documents"), {
+                    Name: name,
+                    Email: email,
+                    Message: message,
+                    Timestamp: Timestamp.now()
+                });
+                
+                alert("Form submitted successfully! Document ID: " + docRef.id);
+
+                // Clear the form
+                document.getElementById('contactForm').reset();
+            } catch (error) {
+                console.error("Error adding document: ", error);
+                alert("Error submitting form: " + error.message);
+            }
+        });
+    </script>
+
+</body>
+</html>
